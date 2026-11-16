@@ -35,6 +35,15 @@ describe("Rental", () => {
     expect(rental.pricePerHour).toBe(100);
   });
 
+  test("default late hours to zero", () => {
+    expect(rental.lateHours).toBe(0);
+  });
+
+  test("store late hours", () => {
+    rental.lateHours = 2;
+    expect(rental.lateHours).toBe(2);
+  });
+
   test("calculate cost", () => {
     expect(rental.cost()).toBe(300);
   });
@@ -71,7 +80,22 @@ describe("Rental", () => {
     expect(() => (rental.pricePerHour = Number.NaN)).toThrow();
   });
 
+  test("reject negative late hours", () => {
+    expect(() => (rental.lateHours = -1)).toThrow();
+  });
+
+  test("reject late hours that are not an integer", () => {
+    expect(() => (rental.lateHours = 1.5)).toThrow();
+  });
+
   test("show the rental as text", () => {
     expect(rental.toString()).toBe("B-123 (Urbana) - Juan Gómez - 3 h - $300");
+  });
+
+  test("show late hours in the rental text", () => {
+    rental.lateHours = 2;
+    expect(rental.toString()).toBe(
+      "B-123 (Urbana) - Juan Gómez - 3 h - $300 - Atraso: 2 h",
+    );
   });
 });
